@@ -218,8 +218,13 @@ class PostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const Center(
-        child: Text('post page.'),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
       ),
     );
   }
