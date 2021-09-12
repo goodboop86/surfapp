@@ -13,24 +13,24 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/',
-      home: MyStatefulWidget(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
-        '/second': (context) => const SecondRoute(),
+        '/second': (context) => const ArticlePage(),
       },
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key? key, required this.title}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int _selectedIndex = 0;
 
@@ -59,7 +59,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SecondRoute()),
+                MaterialPageRoute(builder: (context) => ArticlePage()),
               );
             },
           ),
@@ -75,7 +75,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SecondRoute()),
+                MaterialPageRoute(builder: (context) => ArticlePage()),
               );
             },
           ),
@@ -100,6 +100,26 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       setState(() {
         _counter++;
       });
+    }
+
+    Route _createRoute() {
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const PostPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      );
     }
 
     return Scaffold(
@@ -159,7 +179,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       // in the middle of the parent.
 
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        //onPressed: _incrementCounter,
+        onPressed: () {
+          Navigator.of(context).push(_createRoute());
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -167,8 +190,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({Key? key}) : super(key: key);
+class ArticlePage extends StatelessWidget {
+  const ArticlePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +206,20 @@ class SecondRoute extends StatelessWidget {
           },
           child: Text('Go back!'),
         ),
+      ),
+    );
+  }
+}
+
+class PostPage extends StatelessWidget {
+  const PostPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: const Center(
+        child: Text('post page.'),
       ),
     );
   }
